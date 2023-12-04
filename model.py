@@ -1,5 +1,5 @@
 # import libraries needed 
-import numpy as np              # for array operations  
+import numpy as np              
 from sklearn.datasets import load_iris      # loading the iris dataset
 from sklearn.model_selection import train_test_split  
 from sklearn.preprocessing import StandardScaler   # for scaling the data
