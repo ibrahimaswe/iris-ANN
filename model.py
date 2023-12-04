@@ -76,14 +76,14 @@ y_train_one_hot = lb.fit_transform(y_train)
 # Now train the network 
 start_time = time.time()
 for i in range(1000):
-    ann.train(X_train_bias, y_train_one_hot)  # Use y_train_one_hot here
+    ann.train(X_train_bias, y_train_one_hot)  
 end_time = time.time()
 ann_time = end_time - start_time
 
 # Second timer
 start_time = time.time()
 for i in range(1000):
-    ann2.train(X_train_bias, y_train_one_hot)  # And here
+    ann2.train(X_train_bias, y_train_one_hot)  
 end_time = time.time()
 ann2_time = end_time - start_time
 
