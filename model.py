@@ -73,30 +73,46 @@ X_test_bias = np.c_[X_test, np.ones(X_test.shape[0])]
 lb = LabelBinarizer()
 y_train_one_hot = lb.fit_transform(y_train)
 
-# Now train the network 
-start_time = time.time()
-for i in range(1000):
-    ann.train(X_train_bias, y_train_one_hot)  
-end_time = time.time()
-ann_time = end_time - start_time
+#  variables to store total time and accuracy. set all to 0 
+time1, time2, total_accuracy1, total_accuracy2 = 0, 0, 0, 0
 
-# Second timer
-start_time = time.time()
-for i in range(1000):
-    ann2.train(X_train_bias, y_train_one_hot)  
-end_time = time.time()
-ann2_time = end_time - start_time
+# Number of runs to find the average time and accuracy later 
+runs = 5
 
+for _ in range(runs):
+    # Train and time network 1
+    start_time = time.time()
+    for i in range(1000):
+        ann.train(X_train_bias, y_train_one_hot)
+    end_time = time.time()
+    ann_time = end_time - start_time
+    time1 += ann_time
 
-# now we test our network: 
-# Test the network
-output1 = ann.forward_propagation(X_test_bias)
-predicted1 = np.argmax(output1, axis=1)
-accuracy1 = np.mean(predicted1 == y_test)
+    # Train and time network 2
+    start_time = time.time()
+    for i in range(1000):
+        ann2.train(X_train_bias, y_train_one_hot)
+    end_time = time.time()
+    ann2_time = end_time - start_time
+    time2 += ann2_time
 
-output2 = ann2.forward_propagation(X_test_bias)
-predicted2 = np.argmax(output2, axis=1)
-accuracy2 = np.mean(predicted2 == y_test)
+    # Test the first network 
+    output1 = ann.forward_propagation(X_test_bias)
+    predicted1 = np.argmax(output1, axis=1)
+    accuracy1 = np.mean(predicted1 == y_test)
+    total_accuracy1 += accuracy1
 
-print(f'Topology 5-2-3: Accuracy: {accuracy1 * 100}%, Time: {ann_time} seconds')
-print(f'Topology 5-6-3: Accuracy: {accuracy2 * 100}%, Time: {ann2_time} seconds')
+    # Test network 2
+    output2 = ann2.forward_propagation(X_test_bias)
+    predicted2 = np.argmax(output2, axis=1)
+    accuracy2 = np.mean(predicted2 == y_test)
+    total_accuracy2 += accuracy2
+
+# Calculate average time and accuracy
+avg_time1 = time1 / runs
+avg_time2 = time2 / runs
+avg_accuracy1 = total_accuracy1 / runs
+avg_accuracy2 = total_accuracy2 / runs
+
+print(f'Topology 5-2-3: Average Accuracy: {avg_accuracy1 * 100}%, Average Time: {avg_time1} seconds')
+print(f'Topology 5-6-3: Average Accuracy: {avg_accuracy2 * 100}%, Average Time: {avg_time2} seconds')
